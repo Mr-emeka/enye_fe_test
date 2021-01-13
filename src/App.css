@@ -33,6 +33,10 @@
 .MuiTableCell-root{
   padding: 6px !important;
 }
+.MuiAppBar-colorPrimary {
+    color: #fff;
+    background-color: var(--secondary-color) !important;
+}
 @media screen and (max-width: 670px) {
   .filter {
     display: grid;

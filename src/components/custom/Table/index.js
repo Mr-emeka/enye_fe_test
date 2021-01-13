@@ -168,7 +168,6 @@ export default function BasicTable({profiles=[]}) {
                   style={{
                     borderBottom: '1px solid rgba(224, 224, 224, 0.3)',
                   }}>
-                {console.log(row)}
                   <TableCell
                       key={1 + i}>
                     {row.FirstName}
@@ -269,7 +268,7 @@ export default function BasicTable({profiles=[]}) {
               margin: 'auto',
               marginBottom: '20px',
             }}>
-            You have no payment yet
+            There is no Profile
           </div>
         </div>
       )}

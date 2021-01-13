@@ -35,12 +35,20 @@ fetch(`https://api.enye.tech/v1/challenge/records`)
 )}
 ,[])
 
-const filterFunc = (profiles,searchTerm,filterByPaymentMethod,filterByGender)=>{
+const filterFunc = (profiles,searchTerm,filterByGender,filterByPaymentMethod)=>{
   let filteredResult;
-  filteredResult = profiles.filter(({FirstName,LastName}) => FirstName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    LastName.toLowerCase().includes(searchTerm.toLowerCase()));
-return filteredResult;
+(filterByPaymentMethod !== '' && filterByGender !== '') ?
+filteredResult = profiles.filter(({FirstName,LastName,PaymentMethod,Gender}) => (FirstName.toLowerCase().includes(searchTerm.toLowerCase()) || LastName.toLowerCase().includes(searchTerm.toLowerCase()))  && filterByGender ===Gender && filterByPaymentMethod === PaymentMethod)
+:
+filterByGender !== ''?
+filteredResult = profiles.filter(({FirstName,LastName,Gender}) => (FirstName.toLowerCase().includes(searchTerm.toLowerCase()) || LastName.toLowerCase().includes(searchTerm.toLowerCase()))  && filterByGender ===Gender)
+:
+filterByPaymentMethod !== ''?
+filteredResult = profiles.filter(({FirstName,LastName,PaymentMethod}) => (FirstName.toLowerCase().includes(searchTerm.toLowerCase()) || LastName.toLowerCase().includes(searchTerm.toLowerCase()))  && filterByPaymentMethod ===PaymentMethod):
+filteredResult = profiles.filter(({FirstName,LastName,PaymentMethod,Gender}) => (FirstName.toLowerCase().includes(searchTerm.toLowerCase()) || LastName.toLowerCase().includes(searchTerm.toLowerCase())))
 
+
+return filteredResult;
 
 }
 
@@ -51,26 +59,27 @@ return filteredResult;
           <SearchBar
           value={searchTerm}
           onChange={(newValue) => setSearchTerm( newValue )}
-          // onRequestSearch={() => filterFunc(searchTerm)}
+          onRequestSearch={() => filterFunc(profiles,searchTerm,filterByGender,filterByPaymentMethod)}
+          onCancelSearch={()=>setSearchTerm('')}
           />
         </div>
         <div className="filter__filter">
         <div className="filter__text">
         <h4>Filter By:</h4>
         </div>
-         <FormControl className={classes.formControl}>
+         <FormControl className={classes.formControl} style={{width:'150px'}}>
         <InputLabel id="demo-controlled-open-select-label">PaymentMethod</InputLabel>
         <Select
           labelId="demo-controlled-open-select-label"
           id="demo-controlled-open-select"
           value={filterByPaymentMethod}
-          onChange={(e)=>setPaymentMethod(e.target.value)}
+          onChange={(e)=>{setPaymentMethod(e.target.value)}}
         >
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
           <MenuItem value='paypal'>paypal</MenuItem>
-          <MenuItem value='paypal'>money order</MenuItem>
+          <MenuItem value='money order'>money order</MenuItem>
           <MenuItem value='check'>check</MenuItem>
           <MenuItem value='cc'>cc</MenuItem>
         </Select>
